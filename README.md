@@ -2,6 +2,8 @@
 
 Unity3D Editor Tools Collection
 
+Odin inspector asset is Requaired : https://odininspector.com
+
 ## Unity Package Installation
 
 Add to your project manifiest by path [%UnityProject%]/Packages/manifiest.json these lines:
