@@ -30,7 +30,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 
 #if ODIN_INSPECTOR
         [OnValueChanged("UpdateGuidAssetData")]
-        [InlineEditor]
+        [InlineEditor(InlineEditorObjectFieldModes.Foldout)]
         [PreviewField(ObjectFieldAlignment.Center, Height = 140)]
 #endif
         public Object asset;
