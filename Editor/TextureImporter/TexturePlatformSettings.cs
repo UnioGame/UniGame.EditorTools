@@ -1,43 +1,48 @@
 ﻿namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
 {
     using System;
-    using System.Collections.Generic;
+    using Sirenix.OdinInspector;
     using UnityEditor;
-    using UnityEngine;
 
-    [Serializable]
-    public class ActivatableValue<T>
-    {
-        public bool enabled;
-        public T    value;
-    }
-    
-    [Serializable]
-    public class BoolValue : ActivatableValue<bool> {} 
-    
-    [Serializable]
-    public class BoolValue : ActivatableValue<bool> {} 
-    
-    
+
     [Serializable]
     public class TexturePlatformSettings
     {
-        public                 bool                        overriden            = true;
-        public                 bool                        allowsAlphaSplitting = false;
-        public                 AndroidETC2FallbackOverride androidETC2FallbackOverride;
-        [Range(0, 100)] public int                         compressionQuality     = 50;
-        public                 bool                        useCrunchedCompression = true;
-        public                 TextureImporterFormat       textureImporterFormat  = TextureImporterFormat.ETC2_RGBA8Crunched;
-        public                 TextureImporterCompression  textureCompression     = TextureImporterCompression.Compressed;
-        public                 TextureResizeAlgorithm      resizeAlgorithm        = TextureResizeAlgorithm.Mitchell;
-
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ValueDropdown("TextureSizes")]
-        public int maxTextureSize = 1024;
+        [InlineProperty]
 #endif
-
-        private static IEnumerable<int> TextureSizes = new List<int>() {
-            32, 64, 128, 256, 512, 1024, 2048, 4096
-        };
+        public BoolValue                             overriden                   = new BoolValue(true);
+#if ODIN_INSPECTOR
+        [InlineProperty]
+#endif
+        public BoolValue                             allowsAlphaSplitting        = new BoolValue(false);
+#if ODIN_INSPECTOR
+        [InlineProperty]
+#endif
+        public AndroidFallbackFormatValue            androidETC2FallbackOverride = new AndroidFallbackFormatValue();
+#if ODIN_INSPECTOR
+        [InlineProperty]
+#endif
+        public CompressionQualityValue               compressionQuality          = new CompressionQualityValue();
+#if ODIN_INSPECTOR
+        [InlineProperty]
+#endif
+        public BoolValue                             useCrunchedCompression      = new BoolValue(true);
+#if ODIN_INSPECTOR
+        [InlineProperty]
+#endif
+        public TextureImporterFormatValue            textureImporterFormat       = new TextureImporterFormatValue(TextureImporterFormat.ETC2_RGBA8Crunched);
+#if ODIN_INSPECTOR
+        [InlineProperty]
+#endif
+        public TextureImporterCompressionFormatValue textureCompression          = new TextureImporterCompressionFormatValue(TextureImporterCompression.Compressed);
+#if ODIN_INSPECTOR
+        [InlineProperty]
+#endif
+        public TextureResizeAlgorithmFormatValue     resizeAlgorithm             = new TextureResizeAlgorithmFormatValue(TextureResizeAlgorithm.Mitchell);
+#if ODIN_INSPECTOR
+        [InlineProperty]
+#endif
+        public TextureSizeValue                      maxTextureSize              = new TextureSizeValue();
     }
 }

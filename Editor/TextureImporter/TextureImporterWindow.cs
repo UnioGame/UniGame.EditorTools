@@ -56,9 +56,6 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
         [Sirenix.OdinInspector.BoxGroup("Import Settings")]
         public TextureImporterFilter importersFilter = (TextureImporterFilter)~0;
         
-        [Sirenix.OdinInspector.BoxGroup("Import Settings")]
-        public bool overrideCurrentPlatformFormat = false;
-
         [SerializeField]
         [Sirenix.OdinInspector.InlineProperty]
         [Sirenix.OdinInspector.HideLabel]
@@ -104,6 +101,7 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
                 Import(assetImporter);
             }
 
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
             
@@ -191,7 +189,7 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
                     var target = string.Equals(buildTarget, defaultTarget, StringComparison.OrdinalIgnoreCase) ? 
                         textureImporterDefaultTarget : buildTarget;
                     var current = textureImporter.GetPlatformTextureSettings(target);
-                    current = UpdateSettings(current);
+                    current = UpdateSettings(current,platformSettings);
                     textureImporter.SetPlatformTextureSettings(current);
                     break;
                 case PSDImporter psdImporter:
@@ -205,7 +203,7 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
                         settings.Add(importerPlatformSettings);
                     }
 
-                    importerPlatformSettings = UpdateSettings(importerPlatformSettings);
+                    importerPlatformSettings = UpdateSettings(importerPlatformSettings,platformSettings);
                     _psdImporterPlatformsFieldInfo.SetValue(psdImporter, settings);
                     break;
                 default:
@@ -213,22 +211,28 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             }
 
             assetImporter.MarkDirty();
-            AssetDatabase.Refresh();
+            assetImporter.SaveAndReimport();
         }
 
-        private TextureImporterPlatformSettings UpdateSettings(TextureImporterPlatformSettings source)
+        private TextureImporterPlatformSettings UpdateSettings(
+            TextureImporterPlatformSettings source, TexturePlatformSettings settings)
         {
-            source.overridden =  platformSettings.overriden;
-            source.format                      = overrideCurrentPlatformFormat ? platformSettings.textureImporterFormat : source.format;
-            source.compressionQuality          = platformSettings.compressionQuality;
-            source.crunchedCompression         = platformSettings.useCrunchedCompression;
-            source.maxTextureSize              = platformSettings.maxTextureSize;
-            source.allowsAlphaSplitting        = platformSettings.allowsAlphaSplitting;
-            source.androidETC2FallbackOverride = platformSettings.androidETC2FallbackOverride;
-            source.textureCompression = platformSettings.textureCompression;
-            source.resizeAlgorithm = platformSettings.resizeAlgorithm;
+            source.overridden                  = Select(settings.overriden , source.overridden);
+            source.format                      = Select(settings.textureImporterFormat , source.format);
+            source.compressionQuality          = Select(settings.compressionQuality , source.compressionQuality);
+            source.crunchedCompression         = Select(settings.useCrunchedCompression , source.crunchedCompression);
+            source.maxTextureSize              = Select(settings.maxTextureSize , source.maxTextureSize);
+            source.allowsAlphaSplitting        = Select(settings.allowsAlphaSplitting , source.allowsAlphaSplitting);
+            source.androidETC2FallbackOverride = Select(settings.androidETC2FallbackOverride , source.androidETC2FallbackOverride);
+            source.textureCompression          = Select(settings.textureCompression , source.textureCompression);
+            source.resizeAlgorithm             = Select(settings.resizeAlgorithm , source.resizeAlgorithm);
 
             return source;
+        }
+
+        private T Select<T>(IActivatableValue<T> value, T defaultValue)
+        {
+            return value.Enabled ? value.Value :defaultValue;
         }
     }
 }
