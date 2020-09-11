@@ -6,6 +6,20 @@
     using UnityEngine;
 
     [Serializable]
+    public class ActivatableValue<T>
+    {
+        public bool enabled;
+        public T    value;
+    }
+    
+    [Serializable]
+    public class BoolValue : ActivatableValue<bool> {} 
+    
+    [Serializable]
+    public class BoolValue : ActivatableValue<bool> {} 
+    
+    
+    [Serializable]
     public class TexturePlatformSettings
     {
         public                 bool                        overriden            = true;

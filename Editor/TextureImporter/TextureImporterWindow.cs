@@ -104,8 +104,8 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
                 Import(assetImporter);
             }
 
-            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            AssetDatabase.SaveAssets();
             
             ClearSearch();
         }
@@ -167,6 +167,23 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             }
         }
 
+        public bool IsDefaultTarget(string target)
+        {
+            return defaultTarget.Equals(target, StringComparison.OrdinalIgnoreCase) || textureImporterDefaultTarget.Equals(target, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public string GetDefaultImporterTarget(AssetImporter importer)
+        {
+            switch (importer) {
+                case TextureImporter textureImporter:
+                    return textureImporterDefaultTarget;
+                case PSDImporter psdImporter:
+                    return defaultTarget;
+            }
+
+            return defaultTarget;
+        }
+
         private void Import(AssetImporter assetImporter)
         {
             switch (assetImporter) {
@@ -196,12 +213,12 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             }
 
             assetImporter.MarkDirty();
-            assetImporter.SaveAndReimport();
+            AssetDatabase.Refresh();
         }
 
         private TextureImporterPlatformSettings UpdateSettings(TextureImporterPlatformSettings source)
         {
-            source.overridden = platformSettings.overriden;
+            source.overridden =  platformSettings.overriden;
             source.format                      = overrideCurrentPlatformFormat ? platformSettings.textureImporterFormat : source.format;
             source.compressionQuality          = platformSettings.compressionQuality;
             source.crunchedCompression         = platformSettings.useCrunchedCompression;
