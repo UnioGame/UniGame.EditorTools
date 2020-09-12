@@ -6,12 +6,14 @@
     public class ActivatableValue<T> : IActivatableValue<T>
     {
 #if ODIN_INSPECTOR
-        //[Sirenix.OdinInspector.HorizontalGroup()]
+        [Sirenix.OdinInspector.HorizontalGroup(ActivableInspector.ActivatableLabelWidth)]
+        [Sirenix.OdinInspector.HideLabel]
 #endif 
         public bool enabled;
 #if ODIN_INSPECTOR
-        //[Sirenix.OdinInspector.HorizontalGroup()]
+        [Sirenix.OdinInspector.HorizontalGroup(ActivableInspector.ActivatableValueLabelWidth)]
         [Sirenix.OdinInspector.EnableIf(nameof(enabled))]
+        [Sirenix.OdinInspector.HideLabel]
 #endif
         public T value;
 

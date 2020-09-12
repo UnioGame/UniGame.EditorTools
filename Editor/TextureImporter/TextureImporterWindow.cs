@@ -220,10 +220,10 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             source.overridden                  = Select(settings.overriden , source.overridden);
             source.format                      = Select(settings.textureImporterFormat , source.format);
             source.compressionQuality          = Select(settings.compressionQuality , source.compressionQuality);
-            source.crunchedCompression         = Select(settings.useCrunchedCompression , source.crunchedCompression);
+            source.crunchedCompression         = Select(settings.сrunchedCompression , source.crunchedCompression);
             source.maxTextureSize              = Select(settings.maxTextureSize , source.maxTextureSize);
-            source.allowsAlphaSplitting        = Select(settings.allowsAlphaSplitting , source.allowsAlphaSplitting);
-            source.androidETC2FallbackOverride = Select(settings.androidETC2FallbackOverride , source.androidETC2FallbackOverride);
+            source.allowsAlphaSplitting        = Select(settings.alphaSplitting , source.allowsAlphaSplitting);
+            source.androidETC2FallbackOverride = Select(settings.ETC2FallbackOverride , source.androidETC2FallbackOverride);
             source.textureCompression          = Select(settings.textureCompression , source.textureCompression);
             source.resizeAlgorithm             = Select(settings.resizeAlgorithm , source.resizeAlgorithm);
 
