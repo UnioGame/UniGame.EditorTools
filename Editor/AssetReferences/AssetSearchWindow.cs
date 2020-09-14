@@ -34,9 +34,12 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
         public string filter;
         
         [Tooltip("If target is MonoScript, when type is real target class type")]
-        [Sirenix.OdinInspector.OnValueChanged("OnTargetAssetChanged")]
         public Object objectTypeFilter;
 
+        [Sirenix.OdinInspector.InlineEditor()]
+        [Sirenix.OdinInspector.OnValueChanged(nameof(OnTargetAssetChanged))]
+        public Object singleTarget;
+        
         [Sirenix.OdinInspector.ReadOnly]
         [Sirenix.OdinInspector.InlineProperty]
         public ResourceHandle targetAsset;
@@ -97,8 +100,9 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 
             assetType?.AddToCollection(_filterTypes);
 
-            var assets = AssetEditorTools.
-                GetAssets<Object>(filter, folderFilter.ToArray());
+            var assets = AssetEditorTools.GetAssets<Object>(filter, folderFilter.ToArray());
+            if(singleTarget) assets.Add(singleTarget);
+            
             //remove all filtered 
             assets.RemoveAll(x => FilterAsset(x) == false);
 
@@ -172,7 +176,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 
         private Object OnTargetAssetChanged()
         {
-            targetAsset = new EditorResource().Update(objectTypeFilter);
+            targetAsset = new EditorResource().Update(singleTarget);
             return objectTypeFilter;
         }
         

@@ -96,11 +96,13 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             if (resultAssets.Count == 0) {
                 Search();
             }
-            
+                
             foreach (var assetImporter in resultAssets) {
                 Import(assetImporter);
             }
 
+            var guid = GUID.Generate().ToString();
+            
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
