@@ -9,6 +9,7 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
     using Core.EditorTools.Editor.AssetOperations;
     using Core.Runtime.Extension;
     using Sirenix.OdinInspector.Editor;
+    using UniGreenModules.UniCore.EditorTools.Editor;
     using UniGreenModules.UniCore.EditorTools.Editor.Utility;
     using UniGreenModules.UniCore.Runtime.Extension;
     using UniGreenModules.UniCore.Runtime.Utils;
@@ -96,10 +97,8 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             if (resultAssets.Count == 0) {
                 Search();
             }
-                
-            foreach (var assetImporter in resultAssets) {
-                Import(assetImporter);
-            }
+
+            AssetEditorTools.ShowProgress(ImportProgressAction());
 
             var guid = GUID.Generate().ToString();
             
@@ -115,9 +114,6 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             if (resultAssets.Count == 0) {
                 Search();
             }
-
-            
-
         }        
 
         public void ClearSearch()
@@ -127,6 +123,30 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
         
         #endregion
 
+        private IEnumerable<ProgressData> ImportProgressAction()
+        {
+            var importProgressTemplate = "importing: {0} / {1}";
+            var assetsCount            = resultAssets.Count;
+            var current                = 0;
+            var progress = new ProgressData() {
+                IsDone = false,
+            };
+            
+            foreach (var assetImporter in resultAssets) {
+                progress.Progress = current / (float)assetsCount;
+                progress.Content  = string.Format(importProgressTemplate, current, assetsCount);
+                progress.Title    = assetImporter.assetPath;
+                yield return progress;
+                
+                Import(assetImporter);
+                
+                current++;
+            }
+
+            progress.IsDone = true;
+            yield return progress;
+        }
+        
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -184,57 +204,84 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             return defaultTarget;
         }
 
-        private void Import(AssetImporter assetImporter)
+        private bool Import(AssetImporter assetImporter)
         {
+            var result = false;
+            
             switch (assetImporter) {
                 case TextureImporter textureImporter:
-                    var target = string.Equals(buildTarget, defaultTarget, StringComparison.OrdinalIgnoreCase) ? 
-                        textureImporterDefaultTarget : buildTarget;
-                    var current = textureImporter.GetPlatformTextureSettings(target);
-                    current = UpdateSettings(current,platformSettings);
-                    textureImporter.SetPlatformTextureSettings(current);
+                    result = UpdateTextureImporter(textureImporter);
                     break;
                 case PSDImporter psdImporter:
-                    var settings = _psdImporterPlatformsFieldInfo.GetValue(psdImporter) as List<TextureImporterPlatformSettings>;
-                    var importerPlatformSettings = settings?.FirstOrDefault(x =>
-                        string.Equals(x.name, buildTarget, StringComparison.OrdinalIgnoreCase));
-                    if (importerPlatformSettings == null) {
-                        importerPlatformSettings = new TextureImporterPlatformSettings() {
-                            name = buildTarget,
-                        };
-                        settings.Add(importerPlatformSettings);
-                    }
-
-                    importerPlatformSettings = UpdateSettings(importerPlatformSettings,platformSettings);
-                    _psdImporterPlatformsFieldInfo.SetValue(psdImporter, settings);
+                    result = UpdatePsbImporter(psdImporter);
                     break;
-                default:
-                    return;
             }
 
-            assetImporter.MarkDirty();
-            assetImporter.SaveAndReimport();
+            if (result) {
+                assetImporter.MarkDirty();
+                assetImporter.SaveAndReimport();
+            }
+
+            return result;
         }
 
-        private TextureImporterPlatformSettings UpdateSettings(
+        private bool UpdateTextureImporter(TextureImporter textureImporter)
+        {
+            var target = string.Equals(buildTarget, defaultTarget, StringComparison.OrdinalIgnoreCase) ? 
+                textureImporterDefaultTarget : buildTarget;
+            var current = textureImporter.GetPlatformTextureSettings(target);
+            var result = UpdateSettings(current,platformSettings);
+            if (result) {
+                textureImporter.SetPlatformTextureSettings(current);
+            }
+            
+            return result;
+        }
+
+        private bool UpdatePsbImporter(PSDImporter psdImporter)
+        {
+            var settings = _psdImporterPlatformsFieldInfo.GetValue(psdImporter) as List<TextureImporterPlatformSettings>;
+            var importerPlatformSettings = settings?.FirstOrDefault(x =>
+                string.Equals(x.name, buildTarget, StringComparison.OrdinalIgnoreCase));
+            if (importerPlatformSettings == null) {
+                importerPlatformSettings = new TextureImporterPlatformSettings() {
+                    name = buildTarget,
+                };
+                settings.Add(importerPlatformSettings);
+            }
+
+            var result = UpdateSettings(importerPlatformSettings,platformSettings);
+            if (result) {
+                _psdImporterPlatformsFieldInfo.SetValue(psdImporter, settings);
+            }
+            
+            return result;
+        }
+        
+        private bool UpdateSettings(
             TextureImporterPlatformSettings source, TexturePlatformSettings settings)
         {
-            source.overridden                  = Select(settings.overriden , source.overridden);
-            source.format                      = Select(settings.textureImporterFormat , source.format);
-            source.compressionQuality          = Select(settings.compressionQuality , source.compressionQuality);
-            source.crunchedCompression         = Select(settings.сrunchedCompression , source.crunchedCompression);
-            source.maxTextureSize              = Select(settings.maxTextureSize , source.maxTextureSize);
-            source.allowsAlphaSplitting        = Select(settings.alphaSplitting , source.allowsAlphaSplitting);
-            source.androidETC2FallbackOverride = Select(settings.ETC2FallbackOverride , source.androidETC2FallbackOverride);
-            source.textureCompression          = Select(settings.textureCompression , source.textureCompression);
-            source.resizeAlgorithm             = Select(settings.resizeAlgorithm , source.resizeAlgorithm);
+            var result = false;
+            result |= Select(settings.overriden , source.overridden,x => source.overridden                                              = x);
+            result |= Select(settings.textureImporterFormat , source.format,x => source.format                                          = x );
+            result |= Select(settings.compressionQuality , source.compressionQuality, x=> source.compressionQuality                     = x);
+            result |= Select(settings.сrunchedCompression , source.crunchedCompression, x => source.crunchedCompression                 = x);
+            result |= Select(settings.maxTextureSize , source.maxTextureSize,x => source.maxTextureSize                                 = x);
+            result |= Select(settings.alphaSplitting , source.allowsAlphaSplitting,x => source.allowsAlphaSplitting                     = x);
+            result |= Select(settings.ETC2FallbackOverride , source.androidETC2FallbackOverride,x => source.androidETC2FallbackOverride = x);
+            result |= Select(settings.textureCompression , source.textureCompression,x => source.textureCompression                     = x);
+            result |= Select(settings.resizeAlgorithm , source.resizeAlgorithm, x => source.resizeAlgorithm                             = x);
 
-            return source;
+            return result;
         }
 
-        private T Select<T>(IActivatableValue<T> value, T defaultValue)
+        private bool Select<T>(IActivatableValue<T> value, T defaultValue,Action<T> setter)
         {
-            return value.Enabled ? value.Value :defaultValue;
+            var targetValue = value.Enabled ? value.Value :defaultValue;
+            
+            setter?.Invoke(targetValue);
+            
+            return !object.Equals(value.Value,defaultValue);
         }
     }
 }
