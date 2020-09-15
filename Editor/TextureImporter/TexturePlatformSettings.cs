@@ -29,12 +29,14 @@
 #endif
         [Space]
         public AndroidFallbackFormatValue ETC2FallbackOverride = new AndroidFallbackFormatValue();
+        [Space]
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.InlineProperty]
         [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
         [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/compressionQuality", LabelWidth = LabelWidth)]
 #endif
         public CompressionQualityValue compressionQuality = new CompressionQualityValue();
+        [Space]
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.InlineProperty]
         [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
