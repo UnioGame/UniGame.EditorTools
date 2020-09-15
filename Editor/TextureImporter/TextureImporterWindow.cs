@@ -164,7 +164,15 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
                 resultAssets.AddRange(importers);
             }
 
-            resultAssets.AddRange(Filter(targetAssets.Where(x => x).Select(AssetEditorTools.GetAssetImporter)));
+            var result = Filter(targetAssets.Where(x => x).
+                Select(AssetEditorTools.GetAssetImporter)).
+                ToList();
+
+            var assetsPaths = new  HashSet<string>();
+            resultAssets.AddRange(result);
+            resultAssets = resultAssets.
+                Where(x => assetsPaths.Add(x.assetPath)).
+                ToList();
         }
 
         private IEnumerable<AssetImporter> Filter(IEnumerable<AssetImporter> importers)
