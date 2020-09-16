@@ -1,29 +1,74 @@
 ﻿namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
 {
     using System;
-    using System.Collections.Generic;
     using UnityEditor;
     using UnityEngine;
+
 
     [Serializable]
     public class TexturePlatformSettings
     {
-        public                 bool                        overriden            = true;
-        public                 bool                        allowsAlphaSplitting = false;
-        public                 AndroidETC2FallbackOverride androidETC2FallbackOverride;
-        [Range(0, 100)] public int                         compressionQuality     = 50;
-        public                 bool                        useCrunchedCompression = true;
-        public                 TextureImporterFormat       textureImporterFormat  = TextureImporterFormat.ETC2_RGBA8Crunched;
-        public                 TextureImporterCompression  textureCompression     = TextureImporterCompression.Compressed;
-        public                 TextureResizeAlgorithm      resizeAlgorithm        = TextureResizeAlgorithm.Mitchell;
-
+        private const int LabelWidth = 160;
+        
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ValueDropdown("TextureSizes")]
-        public int maxTextureSize = 1024;
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/overriden", LabelWidth = LabelWidth)]
 #endif
-
-        private static IEnumerable<int> TextureSizes = new List<int>() {
-            32, 64, 128, 256, 512, 1024, 2048, 4096
-        };
+        public BoolValue overriden = new BoolValue(true);
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/alphaSplitting", LabelWidth = LabelWidth)]
+#endif
+        public BoolValue alphaSplitting = new BoolValue(false);
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/androidETC2FallbackOverride", LabelWidth = LabelWidth)]
+#endif
+        [Space]
+        public AndroidFallbackFormatValue ETC2FallbackOverride = new AndroidFallbackFormatValue();
+        [Space]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/compressionQuality", LabelWidth = LabelWidth)]
+#endif
+        public CompressionQualityValue compressionQuality = new CompressionQualityValue();
+        [Space]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/useCrunchedCompression", LabelWidth = LabelWidth)]
+#endif
+        public BoolValue сrunchedCompression = new BoolValue(true);
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/textureImporterFormat", LabelWidth = LabelWidth)]
+#endif
+        [Space]
+        public TextureImporterFormatValue textureImporterFormat = new TextureImporterFormatValue(TextureImporterFormat.ETC2_RGBA8Crunched);
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/textureCompression", LabelWidth = LabelWidth)]
+#endif
+        public TextureImporterCompressionFormatValue textureCompression = new TextureImporterCompressionFormatValue(TextureImporterCompression.Compressed);
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/resizeAlgorithm", LabelWidth = LabelWidth)]
+#endif
+        public TextureResizeAlgorithmFormatValue resizeAlgorithm = new TextureResizeAlgorithmFormatValue(TextureResizeAlgorithm.Mitchell);
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
+        [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/maxTextureSize", LabelWidth = LabelWidth)]
+#endif
+        [Space]
+        public TextureSizeValue maxTextureSize = new TextureSizeValue();
+        
     }
 }
