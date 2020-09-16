@@ -48,6 +48,7 @@
         [Sirenix.OdinInspector.FoldoutGroup("TexturePlatformSettings")]
         [Sirenix.OdinInspector.HorizontalGroup("TexturePlatformSettings/textureImporterFormat", LabelWidth = LabelWidth)]
 #endif
+        [Space]
         public TextureImporterFormatValue textureImporterFormat = new TextureImporterFormatValue(TextureImporterFormat.ETC2_RGBA8Crunched);
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.InlineProperty]
