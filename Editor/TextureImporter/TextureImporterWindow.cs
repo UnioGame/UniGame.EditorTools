@@ -53,6 +53,7 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
         [Sirenix.OdinInspector.BoxGroup("Import Settings")]
         [Sirenix.OdinInspector.ValueDropdown("buildTargets")]
         public string buildTarget = "Default";
+        
         [Space(4)]
         [Sirenix.OdinInspector.BoxGroup("Import Settings")]
         public TextureImporterFilter importersFilter = (TextureImporterFilter)~0;
@@ -63,7 +64,8 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
         [Sirenix.OdinInspector.BoxGroup("Import Settings")]
         public TexturePlatformSettings platformSettings = new TexturePlatformSettings();
 
-
+        public int resizeMultiplayer = 4;
+        
         [Space(8)] 
         [Sirenix.OdinInspector.BoxGroup("Search Filter")]
         [Sirenix.OdinInspector.InlineEditor]
@@ -98,7 +100,7 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
                 Search();
             }
 
-            AssetEditorTools.ShowProgress(ImportProgressAction());
+            AssetEditorTools.ShowProgress(TextureProgressAction(x => Import(x)));
 
             var guid = GUID.Generate().ToString();
             
@@ -120,9 +122,92 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
         {
             resultAssets = new List<AssetImporter>();
         }
+
+// #if ODIN_INSPECTOR
+//         [Sirenix.OdinInspector.Button]
+//         [Sirenix.OdinInspector.GUIColor(0.5f, 0.8f, 0.2f)]
+// #endif
+        public void Resize()
+        {
+            if (resultAssets.Count == 0) {
+                Search();
+            }
+
+            AssetEditorTools.ShowProgress(TextureProgressAction(x => Resize(x)));
+
+        }
         
+
         #endregion
 
+        private IEnumerable<ProgressData> TextureProgressAction(Action<AssetImporter> importerAction)
+        {
+            var importProgressTemplate = "process: {0} / {1}";
+            var assetsCount            = resultAssets.Count;
+            var current                = 0;
+            var progress = new ProgressData() {
+                IsDone = false,
+            };
+            
+            foreach (var assetImporter in resultAssets) {
+                progress.Progress = current / (float)assetsCount;
+                progress.Content  = string.Format(importProgressTemplate, current, assetsCount);
+                progress.Title    = assetImporter.assetPath;
+                yield return progress;
+                
+                importerAction(assetImporter);
+                
+                current++;
+            }
+
+            progress.IsDone = true;
+            yield return progress;
+        }
+
+        
+        private TextureImporter Resize(AssetImporter importer)
+        {
+            var textureImporter = importer as TextureImporter;
+            if (textureImporter == null || resizeMultiplayer <= 1) return textureImporter;
+
+            var isReadable = textureImporter.isReadable;
+            var isChanged  = !isReadable;
+            var texture    = AssetDatabase.LoadAssetAtPath<Texture2D>(textureImporter.assetPath);
+
+            if (!texture) return textureImporter;
+            var width  = texture.width;
+            var height = texture.height;
+
+            var correctWidth  = width % resizeMultiplayer;
+            var correctHeight = height % resizeMultiplayer;
+
+            if (correctWidth == 0 && correctHeight == 0)
+                return textureImporter;
+            correctWidth  = correctWidth == 0 ? width : (width / resizeMultiplayer) * resizeMultiplayer + resizeMultiplayer;
+            correctHeight = correctHeight == 0? height : (height / resizeMultiplayer) * resizeMultiplayer + resizeMultiplayer;
+            
+            if (isChanged) {
+                textureImporter.isReadable = true;
+                textureImporter.SaveAndReimport();
+            }
+
+            if (texture && texture.Resize(correctWidth, correctHeight)) {
+                texture.Apply();
+                texture.MarkDirty();
+                AssetDatabase.Refresh();
+            }
+
+            if (isChanged) {
+                textureImporter.isReadable = isReadable;
+                textureImporter.SaveAndReimport();
+            }
+
+            
+            return textureImporter;
+        }
+
+
+        
         private IEnumerable<ProgressData> ImportProgressAction()
         {
             var importProgressTemplate = "importing: {0} / {1}";
@@ -237,6 +322,7 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
         {
             var target = string.Equals(buildTarget, defaultTarget, StringComparison.OrdinalIgnoreCase) ? 
                 textureImporterDefaultTarget : buildTarget;
+            
             var current = textureImporter.GetPlatformTextureSettings(target);
             var result = UpdateSettings(current,platformSettings);
             if (result) {
