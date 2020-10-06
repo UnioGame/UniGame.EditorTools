@@ -1,18 +1,18 @@
 {
   "name": "com.unigame.editortools",
-  "author": "Mefodei",
+  "author": "UniGameTeam",
   "displayName": "UniGame Editor Tools",
   "description": "Unity3D Editor Tools Collection",
   "unity": "2019.2",
-  "version": "2020.0.11",
+  "version": "2020.0.15",
   "keywords": [
     "Editor",
     "Extension",
     "Tools"
   ],
   "dependencies": {
-    "com.unigame.unicore": "2020.0.11",
-    "com.unity.2d.psdimporter": "2.1.4",
+    "com.unigame.unicore": "2020.0.14",
+    "com.unity.2d.psdimporter": "2.1.6",
     "com.unity.addressables": "1.13.1",
     "com.unigame.neuecc.unirx": "7.1.1",
     "com.unigame.neuecc.unirx.async": "1.3.0"
