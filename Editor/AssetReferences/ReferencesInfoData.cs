@@ -10,8 +10,10 @@
     public class ReferencesInfoData
     {
         [SerializeField]
+#if ODIN_INSPECTOR
         [Sirenix.OdinInspector.HideLabel]
         [Sirenix.OdinInspector.InlineProperty]
+#endif
         public ResourceHandle source;
         
         [Space(4)]

@@ -2,21 +2,27 @@
 {
     using System;
     using Core.Runtime.ScriptableObjects;
-    using Sirenix.OdinInspector;
     using Object = UnityEngine.Object;
 
     [Serializable]
-    [FoldoutGroup("Lifetime")]
+#if ODIN_INSPECTOR
+    [Sirenix.OdinInspector.FoldoutGroup("Lifetime")]
+#endif
     public class LifeTimeEditorItem
     {
-        
-        [InlineEditor(InlineEditorObjectFieldModes.Foldout)]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineEditor(Sirenix.OdinInspector.InlineEditorObjectFieldModes.Foldout)]
+#endif
         public LifetimeScriptableObject LifeTime;
 
-        [InlineProperty]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+#endif
         public bool IsTerminated;
 
-        [InlineProperty]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.InlineProperty]
+#endif
         public string Name { get; private set; }
 
         public LifeTimeEditorItem(LifetimeScriptableObject lifeTime)
@@ -27,7 +33,9 @@
             IsTerminated = LifeTime.LifeTime.IsTerminated;
         }
         
-        [Button]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.Button]
+#endif
         public void Destroy()
         {
             if (LifeTime) {
