@@ -9,10 +9,10 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
     using Core.EditorTools.Editor.AssetOperations;
     using Core.Runtime.Extension;
     using Sirenix.OdinInspector.Editor;
-    using UniGreenModules.UniCore.EditorTools.Editor;
-    using UniGreenModules.UniCore.EditorTools.Editor.Utility;
-    using UniGreenModules.UniCore.Runtime.Extension;
-    using UniGreenModules.UniCore.Runtime.Utils;
+    using UniModules.UniCore.EditorTools.Editor;
+    using UniModules.UniCore.EditorTools.Editor.Utility;
+    using UniModules.UniCore.Runtime.Extension;
+    using UniModules.UniCore.Runtime.Utils;
     using UnityEditor;
     using UnityEditor.U2D.PSD;
     using UnityEngine;

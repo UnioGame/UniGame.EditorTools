@@ -11,7 +11,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
     using Core.EditorTools.Editor.Tools;
     using Core.Runtime.Extension;
     using Sirenix.OdinInspector.Editor;
-    using UniGreenModules.UniGame.Core.Runtime.Extension;
+    using UniModules.UniGame.Core.Runtime.Extension;
     using UnityEditor;
     using UnityEngine;
     using Object = UnityEngine.Object;
