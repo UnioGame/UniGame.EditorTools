@@ -68,7 +68,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
                 var assetItem      = reference.Key;
                 var referencesData = reference.Value.Select(x => x.asset).ToList();
                 var referenceData = new ReferencesInfoData() {
-                    source     = new EditorResource().Update(assetItem),
+                    source     = assetItem.ToEditorResource(),
                     references = referencesData
                 };
                 dependencies.Add(referenceData);

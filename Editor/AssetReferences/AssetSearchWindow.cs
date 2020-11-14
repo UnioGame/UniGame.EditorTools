@@ -123,7 +123,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
                     Select(x => x.asset).
                     ToList();
                 var referenceData = new ReferencesInfoData() {
-                    source     = new EditorResource().Update(assetItem),
+                    source     = assetItem.ToEditorResource(),
                     references = referencesData
                 };
                 _referencesData.Add(referenceData);
@@ -176,7 +176,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 
         private Object OnTargetAssetChanged()
         {
-            targetAsset = new EditorResource().Update(singleTarget);
+            targetAsset = singleTarget.ToEditorResource();
             return objectTypeFilter;
         }
         
