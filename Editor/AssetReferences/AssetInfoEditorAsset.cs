@@ -47,6 +47,8 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 
         [Space(6)] public List<ReferencesInfoData> dependencies = new List<ReferencesInfoData>();
 
+        #endregion
+        
         #region public methods
 
         [Button]
@@ -77,7 +79,6 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 
         #endregion
 
-        #endregion
 
         private void CleanDependencies()
         {
