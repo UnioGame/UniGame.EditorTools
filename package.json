@@ -4,14 +4,14 @@
   "displayName": "UniGame Editor Tools",
   "description": "Unity3D Editor Tools Collection",
   "unity": "2019.2",
-  "version": "2020.1.0",
+  "version": "2020.1.1",
   "keywords": [
     "Editor",
     "Extension",
     "Tools"
   ],
   "dependencies": {
-    "com.unigame.unicore": "2020.1.11",
+    "com.unigame.unicore": "2020.1.12",
     "com.unity.2d.psdimporter": "2.1.6",
     "com.unity.addressables": "1.16.10",
     "com.unigame.neuecc.unirx": "7.1.1",
