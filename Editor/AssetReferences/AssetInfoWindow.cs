@@ -17,7 +17,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 
         public const string DefaultToolsLocation = "Editor.Tools/Editor/";
         
-        public static string DefaultEditorToolPath =
+        public static string DefaultEditorToolPath => 
             EditorFileUtils.Combine(EditorPathConstants.GeneratedContentPath, DefaultToolsLocation);
         
         // Add menu named "My Window" to the Window menu
