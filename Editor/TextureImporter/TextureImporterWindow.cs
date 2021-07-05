@@ -93,22 +93,30 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
         }
 
         [Sirenix.OdinInspector.Button]
+        [Sirenix.OdinInspector.GUIColor(0.2f, 0.8f, 0.2f)]
+        public void SearchAndImport()
+        {
+            ClearSearch();
+            Search();
+            ApplyImportSettings();
+        }
+        
+        [Sirenix.OdinInspector.Button]
         [Sirenix.OdinInspector.GUIColor(0.2f, 1, 0.2f)]
         public void ApplyImportSettings()
         {
-            if (resultAssets.Count == 0) {
-                Search();
+            try
+            {
+                AssetDatabase.StartAssetEditing();
+                AssetEditorTools.ShowProgress(TextureProgressAction(x => Import(x)));
             }
-
-            AssetEditorTools.ShowProgress(TextureProgressAction(x => Import(x)));
-
-            var guid = GUID.Generate().ToString();
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+            }
             
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            AssetDatabase.SaveAssets();
-            
-            ClearSearch();
         }
 
         public void ResetOverrirdes()
@@ -118,8 +126,11 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             }
         }        
 
+        [Sirenix.OdinInspector.Button]
+        [Sirenix.OdinInspector.GUIColor(0.2f, 1, 0.2f)]
         public void ClearSearch()
         {
+            resultAssets?.Clear();
             resultAssets = new List<AssetImporter>();
         }
 
@@ -205,8 +216,6 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
             
             return textureImporter;
         }
-
-
         
         private IEnumerable<ProgressData> ImportProgressAction()
         {
@@ -310,12 +319,12 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
                     break;
             }
 
-            if (result) {
-                assetImporter.MarkDirty();
-                assetImporter.SaveAndReimport();
-            }
+            if (!result) return false;
+            
+            assetImporter.MarkDirty();
+            assetImporter.SaveAndReimport();
 
-            return result;
+            return true;
         }
 
         private bool UpdateTextureImporter(TextureImporter textureImporter)
