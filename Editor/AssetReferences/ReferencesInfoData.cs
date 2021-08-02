@@ -1,8 +1,9 @@
-﻿namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
+﻿using UniModules.Editor;
+
+namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 {
     using System;
     using System.Collections.Generic;
-    using Core.EditorTools.Editor.EditorResources;
     using UnityEngine;
     using Object = UnityEngine.Object;
 

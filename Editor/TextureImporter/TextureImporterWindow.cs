@@ -6,11 +6,10 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Core.EditorTools.Editor.AssetOperations;
+    using UniModules.Editor;
     using Core.Runtime.Extension;
     using Sirenix.OdinInspector.Editor;
     using UniModules.UniCore.EditorTools.Editor;
-    using UniModules.UniCore.EditorTools.Editor.Utility;
     using UniModules.UniCore.Runtime.Extension;
     using UniModules.UniCore.Runtime.Utils;
     using UnityEditor;
