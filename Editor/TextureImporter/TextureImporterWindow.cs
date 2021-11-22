@@ -201,7 +201,11 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
                 textureImporter.SaveAndReimport();
             }
 
+#if UNITY_2021_2_OR_NEWER
+            if (texture && texture.Reinitialize(correctWidth, correctHeight)) {
+#else
             if (texture && texture.Resize(correctWidth, correctHeight)) {
+#endif
                 texture.Apply();
                 texture.MarkDirty();
                 AssetDatabase.Refresh();
