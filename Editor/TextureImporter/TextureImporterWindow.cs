@@ -7,7 +7,7 @@ namespace UniModules.UniGame.EditorTools.Editor.TestureImporter
     using System.Linq;
     using System.Reflection;
     using UniModules.Editor;
-    using Core.Runtime.Extension;
+    using global::UniGame.Core.Runtime.Extension;
     using Sirenix.OdinInspector.Editor;
     using UniModules.UniCore.EditorTools.Editor;
     using UniModules.UniCore.Runtime.Extension;

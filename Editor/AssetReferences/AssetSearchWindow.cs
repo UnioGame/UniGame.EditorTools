@@ -6,7 +6,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
     using System.Collections.Generic;
     using System.Linq;
     using UniModules.Editor;
-    using Core.Runtime.Extension;
+    using global::UniGame.Core.Runtime.Extension;
     using Sirenix.OdinInspector.Editor;
     using UnityEditor;
     using UnityEngine;

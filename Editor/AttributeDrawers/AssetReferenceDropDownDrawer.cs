@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Runtime.Extension;
+    using global::UniGame.Core.Runtime.Extension;
     using UniCore.Runtime.ReflectionUtils;
     using UniCore.Runtime.Utils;
     using UniModules.Editor;
