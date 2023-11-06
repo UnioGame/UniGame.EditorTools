@@ -3,12 +3,15 @@
 
 namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using UniModules.Editor;
     using Sirenix.OdinInspector;
     using UnityEditor;
     using UnityEngine;
+    using Object = UnityEngine.Object;
 
     public class AssetInfoEditorAsset : ScriptableObject
     {
@@ -33,6 +36,14 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 #endif
         public Object asset;
 
+        [TitleGroup("Class Id")]
+        [OnValueChanged(nameof(UpdateClassId))]
+        [InlineButton(nameof(UpdateClassId))]
+        public int classId;
+
+        [TitleGroup("Class Id")] 
+        public string classIdType;
+        
         [FoldoutGroup(FilterGroup)] 
         public string[] fileTypes     = AssetReferenceFinder.DefaultSearchTargets.ToArray();
         
@@ -77,7 +88,37 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 
         #endregion
 
+        
+        public void UpdateClassId()
+        {
+            classIdType = String.Empty;
 
+            try
+            {
+                var assembly = Assembly.GetAssembly(typeof(UnityEditor.Selection));
+                var typeName = "UnityEditor.UnityType";
+                var type = assembly.GetType(typeName, false, true);
+                var method = type.GetMethod("FindTypeByPersistentTypeID");
+                var result = method.Invoke(null, new object[] {classId});
+
+                if (result == null) return;
+
+                var nameFiled = result.GetType().GetProperty("name");
+                var nativeNamespaceField = result.GetType().GetProperty("nativeNamespace");
+                var qualifiedNameField = result.GetType().GetProperty("qualifiedName");
+            
+                var name = nameFiled.GetValue(result) as string;
+                var nativeNamespace = nativeNamespaceField.GetValue(result) as string;
+                var qualifiedName = qualifiedNameField.GetValue(result) as string;
+            
+                classIdType = $"{name} | {qualifiedName} | {nativeNamespace}";
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        
         private void CleanDependencies()
         {
             dependencies.Clear();
