@@ -106,7 +106,7 @@ namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
                 assets = assets.ToArray(),
                 regExFilters = ignoreFilter.
                     Concat(ignoreFolders).
-                    Select(EditorFileUtils.FixUnityPath).
+                    Select(FileUtils.FixUnityPath).
                     ToArray(),
                 fileTypes = typeFilter.ToArray(),
             };
