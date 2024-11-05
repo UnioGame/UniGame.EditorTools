@@ -3,7 +3,6 @@
 
 namespace UniModules.UniGame.EditorTools.Editor.AssetReferences
 {
-    using Core.EditorTools.Editor;
     using UniModules.Editor;
     using Sirenix.OdinInspector;
     using Sirenix.OdinInspector.Editor;
